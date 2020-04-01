@@ -27,8 +27,10 @@ class NewsResponse(
             try {
                 val document = Jsoup.connect(newsResponseUrl).get()
 
-                val content =
-                    document.select(CSS_QUERY_CONTENT).attr(ATTRIBUTE_KEY_CONTENT)
+                val content = document.select(CSS_QUERY_CONTENT).text()
+
+                val keywordList = getKeyword(content)
+
                 val imagePath =
                     document.select(CSS_QUERY_IMAGE).attr(ATTRIBUTE_KEY_IMAGE)
 
@@ -40,7 +42,8 @@ class NewsResponse(
                         newsResponseName,
                         newsResponseUrl,
                         content,
-                        imageBitmap
+                        imageBitmap,
+                        keywordList
                     )
                     callback.convertData(newsItem)
                 }
@@ -56,12 +59,12 @@ class NewsResponse(
                 val toImageBitmap = failToBringImage.bitmap
 
                 AppExecutors().mainThread.execute {
-
                     val newsItem = NewsItem(
                         newsResponseName,
                         newsResponseUrl,
                         "",
-                        toImageBitmap
+                        toImageBitmap,
+                        emptyList()
                     )
                     callback.convertData(newsItem)
                 }
@@ -77,11 +80,88 @@ class NewsResponse(
         return BitmapFactory.decodeStream(stream)
     }
 
+    private fun getKeyword(content: String): List<String> {
+
+        //반환할 키워드 3개의 리스트
+        val getKeywordList = mutableListOf<String>()
+
+
+        if (content.isEmpty()) {
+            return emptyList()
+        }
+
+
+        val foundCountPerSentencesHashMap = mutableMapOf<String, Int>()
+
+        val toSplitContent = content.split(" ")
+        val findSentencesCount = mutableListOf<Int>()
+
+        //중복되는 갯수를 얻는 for 문
+        for (i in 0 until toSplitContent.size) {
+            var count = 0
+            toSplitContent.forEach { splitSentences ->
+                if (toSplitContent[i] == splitSentences) {
+                    count++
+                }
+            }
+            findSentencesCount.add(count)
+        }
+
+        //문장에 대한 발견된 수를 합치는 for 문
+        for (i in 0 until toSplitContent.size) {
+            foundCountPerSentencesHashMap[toSplitContent[i]] = findSentencesCount[i]
+        }
+
+        //문장에 대한 오름차순
+        val toSortSentencesMap =
+            foundCountPerSentencesHashMap.toList().sortedWith(compareBy { it.second }).toMap()
+
+        val segList = hashMapOf<Int, MutableList<String>>()
+        val i = toSortSentencesMap.entries.iterator()
+
+        //발견된 횟수에 대한 문장들 집합 작업
+        while (i.hasNext()) {
+            val next = i.next()
+            if (segList[next.value] != null) {
+                val city = segList[next.value]
+
+                city?.let {
+                    it.add(next.key)
+                    segList[next.value] = it
+                }
+            } else {
+                val city = ArrayList<String>()
+                city.add(next.key)
+                segList[next.value] = city
+            }
+        }
+
+
+        //발견된 숫자에 대한 내림차순
+        val allSentencesByFoundCount = segList.toList().sortedByDescending { it.first }.toMap()
+
+        var getKeywordCount = 0
+
+
+        //발견된 횟수가 많은 순서대로의 문장들 중 3개를 선별하는 작업.
+        allSentencesByFoundCount.forEach {
+            // it.value => 발견된 횟수
+            it.value.forEach { sentences ->
+
+                if (getKeywordCount < 3 && sentences.length >= 2) {
+                    getKeywordCount++
+                    getKeywordList.add(sentences)
+                }
+            }
+        }
+
+        return getKeywordList
+    }
+
 
     companion object {
 
-        private const val ATTRIBUTE_KEY_CONTENT = "content"
-        private const val CSS_QUERY_CONTENT = "meta[property=og:description]"
+        private const val CSS_QUERY_CONTENT = "div[itemprop=articleBody]"
         private const val ATTRIBUTE_KEY_IMAGE = "content"
         private const val CSS_QUERY_IMAGE = "meta[property=og:image]"
     }

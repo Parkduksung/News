@@ -8,9 +8,7 @@ interface NewsContract {
 
         fun showNewsData(item: NewsItem)
 
-        fun showLoadingProgress()
-
-        fun showEndNewsDataLoad()
+        fun showDataProgress(state: Boolean)
 
     }
 

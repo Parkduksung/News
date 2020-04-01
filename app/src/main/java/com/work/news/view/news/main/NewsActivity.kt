@@ -1,9 +1,9 @@
 package com.work.news.view.news.main
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.work.news.App
 import com.work.news.R
@@ -29,12 +29,12 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.news_main_activity)
 
-
         presenter = NewsPresenter(
             this, NewsRepositoryImpl.getInstance(
                 NewsRemoteDataSourceImpl.getInstance(AppExecutors())
             )
         )
+
 
         rv_news_main.run {
             layoutManager = LinearLayoutManager(this@NewsActivity)
@@ -42,12 +42,14 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
         }
 
         presenter.getNewsData()
+
+
     }
 
 
     override fun showNewsData(item: NewsItem) {
 
-        showEndNewsDataLoad()
+        showDataProgress(END_DATA_LOAD)
 
         rv_news_main.run {
             newsAdapter.addData(item)
@@ -55,22 +57,24 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
 
     }
 
-
     override fun newsItemClick(newsItem: NewsItem) {
         Toast.makeText(App.instance.context(), newsItem.newsItemUrl, Toast.LENGTH_SHORT).show()
     }
 
-
-    override fun showLoadingProgress() {
-        newsAdapter.clearListData()
-        pb_news_main_loading.bringToFront()
-        pb_news_main_loading.visibility = View.VISIBLE
-        pb_news_main_loading.isIndeterminate = true
+    override fun showDataProgress(state: Boolean) {
+        if (state) {
+            newsAdapter.clearListData()
+        }
+        pb_news_main_loading.isVisible = state
+        pb_news_main_loading.isIndeterminate = state
     }
 
-    override fun showEndNewsDataLoad() {
-        pb_news_main_loading.visibility = View.GONE
-        pb_news_main_loading.isIndeterminate = false
+
+    companion object {
+
+        const val LOADING_DATA = true
+        const val END_DATA_LOAD = false
+
     }
 
 

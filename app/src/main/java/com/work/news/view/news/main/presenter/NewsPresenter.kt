@@ -4,6 +4,7 @@ import com.work.news.data.model.NewsItem
 import com.work.news.data.repository.NewsRepository
 import com.work.news.data.repository.NewsRepositoryCallback
 import com.work.news.network.model.NewsResponse
+import com.work.news.view.news.main.NewsActivity
 
 class NewsPresenter(
     private val newsView: NewsContract.View,
@@ -12,7 +13,7 @@ class NewsPresenter(
 
     override fun getNewsData() {
 
-        newsView.showLoadingProgress()
+        newsView.showDataProgress(NewsActivity.LOADING_DATA)
 
         newsRepository.getNewsData(NEWS_URL, object : NewsRepositoryCallback {
             override fun onSuccess(newsList: List<NewsResponse>) {
@@ -20,6 +21,7 @@ class NewsPresenter(
                 newsList.map {
                     it.toNewsItem(object : NewsResponse.ToNewsItemCallback {
                         override fun convertData(newsItem: NewsItem) {
+
                             newsView.showNewsData(newsItem)
                         }
                     })
@@ -33,8 +35,8 @@ class NewsPresenter(
     }
 
     companion object {
-        private const val NEWS_URL = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
 
+        private const val NEWS_URL = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
 
     }
 }

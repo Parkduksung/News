@@ -1,16 +1,16 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:layout_margin="0.1dp"
-    android:clipToPadding="true">
+    android:layout_margin="0.1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
         android:orientation="horizontal"
-        android:weightSum="4"
+        android:weightSum="5"
         tools:ignore="ContentDescription">
 
         <ImageView
@@ -22,31 +22,101 @@
             android:layout_weight="1"
             android:scaleType="centerCrop" />
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
+            android:layout_marginStart="5dp"
+            android:layout_weight="4"
+            android:clipToPadding="true"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints, UnusedAttribute">
+
 
             <TextView
                 android:id="@+id/tv_news_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
                 android:singleLine="true"
-                android:textSize="20sp"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                tools:ignore="NestedWeights" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_news_item_content"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="40dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:singleLine="true"
-                android:textSize="20sp" />
-        </LinearLayout>
+                android:maxLines="2"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_news_item_name" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ll_news_keyword"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_news_item_content">
+
+                <TextView
+                    android:id="@+id/tv_news_keyword1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:autoSizeMaxTextSize="10sp"
+                    android:autoSizeMinTextSize="5sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/keyword_round_background"
+                    android:gravity="center"
+                    android:maxEms="6"
+                    android:minEms="4"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_news_keyword2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:autoSizeMaxTextSize="10sp"
+                    android:autoSizeMinTextSize="5sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/keyword_round_background"
+                    android:gravity="center"
+                    android:maxEms="6"
+                    android:minEms="4"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tv_news_keyword1"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_news_keyword3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:autoSizeMaxTextSize="10sp"
+                    android:autoSizeMinTextSize="5sp"
+                    android:autoSizeTextType="uniform"
+                    android:background="@drawable/keyword_round_background"
+                    android:gravity="center"
+                    android:maxEms="6"
+                    android:minEms="4"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/tv_news_keyword2"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </LinearLayout>
 

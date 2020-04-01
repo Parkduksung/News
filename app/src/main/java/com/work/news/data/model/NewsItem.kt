@@ -6,5 +6,6 @@ class NewsItem(
     val newsItemName: String,
     val newsItemUrl: String,
     val newsItemContent: String,
-    val newsItemImage: Bitmap
+    val newsItemImage: Bitmap,
+    val newsItemKeywordList: List<String>
 )
