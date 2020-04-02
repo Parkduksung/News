@@ -14,7 +14,7 @@ interface NewsContract {
 
     interface Presenter {
 
-        fun getNewsData()
+        fun getNewsData(url: String)
 
     }
 

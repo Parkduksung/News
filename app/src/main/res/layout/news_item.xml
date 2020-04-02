@@ -34,7 +34,7 @@
 
 
             <TextView
-                android:id="@+id/tv_news_item_name"
+                android:id="@+id/tv_news_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
@@ -55,7 +55,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_news_item_name" />
+                app:layout_constraintTop_toBottomOf="@id/tv_news_item_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ll_news_keyword"

@@ -8,4 +8,12 @@
     <string name="splash_label2">뉴스의 키워드를 알아보세요</string>
     <string name="splash_label3">뉴스를 클릭하면 원본 뉴스를 볼 수 있습니다.</string>
 
+    //news_main_sector
+    <string name="backPressed_exit_notification_message">뒤로가기 버튼을 한번 더 누르면 종료됩니다.</string>
+    <string name="loadData_not_yet_notification_message">데이터가 로딩중입니다. 잠시만 기려주세요.</string>
+
+
+    //news_details_sector
+    <string name="news_details_keyword_content">관련 키워드</string>
+
 </resources>

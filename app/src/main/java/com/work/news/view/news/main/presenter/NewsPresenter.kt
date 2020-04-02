@@ -11,18 +11,35 @@ class NewsPresenter(
     private val newsRepository: NewsRepository
 ) : NewsContract.Presenter {
 
-    override fun getNewsData() {
+    private val redundancyPreventionForNewsItem by lazy { mutableSetOf<NewsItem>() }
+
+    override fun getNewsData(url: String) {
 
         newsView.showDataProgress(NewsActivity.LOADING_DATA)
 
-        newsRepository.getNewsData(NEWS_URL, object : NewsRepositoryCallback {
+        getConvertNewsData(url)
+
+    }
+
+    //url 에 따른 데이터 가져옴
+    private fun getConvertNewsData(url: String) {
+
+        newsRepository.getNewsData(url, object : NewsRepositoryCallback {
             override fun onSuccess(newsList: List<NewsResponse>) {
 
                 newsList.map {
                     it.toNewsItem(object : NewsResponse.ToNewsItemCallback {
                         override fun convertData(newsItem: NewsItem) {
 
-                            newsView.showNewsData(newsItem)
+                            // 사용자가 임의로 새로고침 계속 할 경우 방지.
+                            if (!redundancyPreventionForNewsItem.contains(newsItem)) {
+                                redundancyPreventionForNewsItem.add(newsItem)
+                                newsView.showNewsData(newsItem)
+
+                                if (newsList.size == redundancyPreventionForNewsItem.size) {
+                                    newsView.showDataProgress(NewsActivity.END_DATA_LOAD)
+                                }
+                            }
                         }
                     })
                 }
@@ -32,11 +49,13 @@ class NewsPresenter(
 
             }
         })
-    }
 
-    companion object {
-
-        private const val NEWS_URL = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
 
     }
+
+    //새로고침시 중복확인에 사용되는 list 초기화
+    fun resetNewsItemList() {
+        redundancyPreventionForNewsItem.clear()
+    }
+
 }

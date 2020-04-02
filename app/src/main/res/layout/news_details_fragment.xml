@@ -1,6 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
 
-</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pb_news_details_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:padding="150dp"
+        android:visibility="visible" />
+
+    <ImageButton
+        android:id="@+id/ib_news_details_back_pressed"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/back_pressed"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/ll_news_details_title_and_keyword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ib_news_details_back_pressed"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        tools:ignore="UnusedAttribute">
+
+        <TextView
+            android:id="@+id/tv_news_details_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:autoSizeMaxTextSize="30dp"
+            android:autoSizeMinTextSize="10dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            tools:ignore="UnusedAttribute" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_news_details_keyword"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/news_details_keyword_border_background"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/tv_news_details_keyword_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/news_details_keyword_content"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_news_details_keyword1"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/keyword_round_background"
+                android:gravity="center"
+                android:maxEms="6"
+                android:minEms="4"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_news_details_keyword_content"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_news_details_keyword2"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/keyword_round_background"
+                android:gravity="center"
+                android:maxEms="6"
+                android:minEms="4"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tv_news_details_keyword1"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_news_details_keyword3"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="5sp"
+                android:autoSizeTextType="uniform"
+                android:background="@drawable/keyword_round_background"
+                android:gravity="center"
+                android:maxEms="6"
+                android:minEms="4"
+                android:paddingStart="3dp"
+                android:paddingEnd="3dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tv_news_details_keyword2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+    <WebView
+        android:id="@+id/wb_news_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_news_details_title_and_keyword"
+        android:layout_marginTop="10dp" />
+
+
+</RelativeLayout>

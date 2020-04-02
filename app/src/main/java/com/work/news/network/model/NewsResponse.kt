@@ -11,8 +11,8 @@ import com.work.news.util.AppExecutors
 import org.jsoup.Jsoup
 import java.net.URL
 
-class NewsResponse(
-    var newsResponseName: String = "",
+data class NewsResponse(
+    var newsResponseTitle: String = "",
     var newsResponseUrl: String = ""
 ) {
 
@@ -39,7 +39,7 @@ class NewsResponse(
                 AppExecutors().mainThread.execute {
 
                     val newsItem = NewsItem(
-                        newsResponseName,
+                        newsResponseTitle,
                         newsResponseUrl,
                         content,
                         imageBitmap,
@@ -50,20 +50,12 @@ class NewsResponse(
 
             } catch (e: Exception) {
 
-                val failToBringImage =
-                    ContextCompat.getDrawable(
-                        App.instance.context(),
-                        R.drawable.fail_to_bring_image
-                    ) as BitmapDrawable
-
-                val toImageBitmap = failToBringImage.bitmap
-
                 AppExecutors().mainThread.execute {
                     val newsItem = NewsItem(
-                        newsResponseName,
+                        newsResponseTitle,
                         newsResponseUrl,
                         "",
-                        toImageBitmap,
+                        getFailToBringBitmap(),
                         emptyList()
                     )
                     callback.convertData(newsItem)
@@ -80,6 +72,17 @@ class NewsResponse(
         return BitmapFactory.decodeStream(stream)
     }
 
+
+    private fun getFailToBringBitmap(): Bitmap {
+        val failToBringImage =
+            ContextCompat.getDrawable(
+                App.instance.context(),
+                R.drawable.fail_to_bring_image
+            ) as BitmapDrawable
+        return failToBringImage.bitmap
+    }
+
+
     private fun getKeyword(content: String): List<String> {
 
         //반환할 키워드 3개의 리스트
@@ -89,7 +92,6 @@ class NewsResponse(
         if (content.isEmpty()) {
             return emptyList()
         }
-
 
         val foundCountPerSentencesHashMap = mutableMapOf<String, Int>()
 
@@ -161,7 +163,7 @@ class NewsResponse(
 
     companion object {
 
-        private const val CSS_QUERY_CONTENT = "div[itemprop=articleBody]"
+        const val CSS_QUERY_CONTENT = "div[itemprop=articleBody]"
         private const val ATTRIBUTE_KEY_IMAGE = "content"
         private const val CSS_QUERY_IMAGE = "meta[property=og:image]"
     }

@@ -24,7 +24,7 @@ class NewsViewHolder(
     fun bind(item: NewsItem) {
         super.itemView.run {
 
-            tv_news_item_name.text = item.newsItemName
+            tv_news_item_title.text = item.newsItemTitle
             tv_news_item_content.text = item.newsItemContent
 
             checkKeywordList(item.newsItemKeywordList)
@@ -57,9 +57,7 @@ class NewsViewHolder(
                 tv_news_keyword2.text = keywordList[1]
                 tv_news_keyword3.text = keywordList[2]
             }
-
         }
-
     }
 
 }

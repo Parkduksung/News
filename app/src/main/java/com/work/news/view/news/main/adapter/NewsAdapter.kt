@@ -20,7 +20,6 @@ class NewsAdapter(private val newsItemClickListener: NewsItemClickListener) :
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) =
         holder.bind(newsList[position])
 
-
     fun addData(newsItem: NewsItem) {
         newsList.add(newsItem)
         notifyItemInserted(newsList.lastIndex)
