@@ -10,6 +10,8 @@ interface NewsContract {
 
         fun showDataProgress(state: Boolean)
 
+        fun showLoadDataErrorState(state: Boolean)
+
     }
 
     interface Presenter {

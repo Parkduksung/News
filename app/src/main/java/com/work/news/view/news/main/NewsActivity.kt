@@ -97,6 +97,12 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
 
     }
 
+    //인터넷 연결 상태에 대한 사용자에게 보여주는 부분
+    override fun showLoadDataErrorState(state: Boolean) {
+        rv_news_main.isVisible = !state
+        tv_news_main_load_error.isVisible = state
+    }
+
     //item 클릭 시, 상세페이지로 화면전환
     override fun newsItemClick(newsItem: NewsItem) {
 

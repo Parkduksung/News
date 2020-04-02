@@ -11,9 +11,10 @@
     //news_main_sector
     <string name="backPressed_exit_notification_message">뒤로가기 버튼을 한번 더 누르면 종료됩니다.</string>
     <string name="loadData_not_yet_notification_message">데이터가 로딩중입니다. 잠시만 기려주세요.</string>
-
+    <string name="loadData_error_message">데이터 로드 할 수 없습니다.  \n인터넷 연결을 확인해 보세요!</string>
 
     //news_details_sector
     <string name="news_details_keyword_content">관련 키워드</string>
+
 
 </resources>

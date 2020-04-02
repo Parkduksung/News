@@ -26,11 +26,10 @@ class NewsPresenter(
 
         newsRepository.getNewsData(url, object : NewsRepositoryCallback {
             override fun onSuccess(newsList: List<NewsResponse>) {
-
+                newsView.showLoadDataErrorState(false)
                 newsList.map {
                     it.toNewsItem(object : NewsResponse.ToNewsItemCallback {
                         override fun convertData(newsItem: NewsItem) {
-
                             // 사용자가 임의로 새로고침 계속 할 경우 방지.
                             if (!redundancyPreventionForNewsItem.contains(newsItem)) {
                                 redundancyPreventionForNewsItem.add(newsItem)
@@ -46,10 +45,10 @@ class NewsPresenter(
             }
 
             override fun onFailure() {
-
+                newsView.showLoadDataErrorState(true)
+                newsView.showDataProgress(NewsActivity.END_DATA_LOAD)
             }
         })
-
 
     }
 

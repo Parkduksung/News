@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.work.news.view.news.details
 
 import android.content.Intent
@@ -69,6 +71,7 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
             }
 
             showUrl(wb_news_details, newsItem.newsItemUrl)
+
         }
 
     }
@@ -118,7 +121,24 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
         webView.webViewClient = object : WebViewClient() {
 
+            //url 연결 안될때
+            override fun onReceivedError(
+                view: WebView?,
+                errorCode: Int,
+                description: String?,
+                failingUrl: String?
+            ) {
+                super.onReceivedError(view, errorCode, description, failingUrl)
+                showConnectUrlErrorState(true)
+                pb_news_details_loading?.let {
+                    it.visibility = View.GONE
+                }
+            }
+
+            //url 연결중
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+
+                showConnectUrlErrorState(false)
 
                 pb_news_details_loading?.let {
                     it.visibility = View.VISIBLE
@@ -179,6 +199,11 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
     }
 
+    //인터넷 연결 상태에 대한 사용자에게 보여주는 부분
+    private fun showConnectUrlErrorState(state: Boolean) {
+        wb_news_details.isVisible = !state
+        tv_news_details_load_error.isVisible = state
+    }
 
     companion object {
 

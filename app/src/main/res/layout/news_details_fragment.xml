@@ -129,13 +129,22 @@
 
     </LinearLayout>
 
-
     <WebView
         android:id="@+id/wb_news_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ll_news_details_title_and_keyword"
         android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/tv_news_details_load_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_news_details_title_and_keyword"
+        android:gravity="center"
+        android:text="@string/loadData_error_message"
+        android:textSize="20sp"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>
