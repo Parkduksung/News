@@ -201,8 +201,12 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
     //인터넷 연결 상태에 대한 사용자에게 보여주는 부분
     private fun showConnectUrlErrorState(state: Boolean) {
-        wb_news_details.isVisible = !state
-        tv_news_details_load_error.isVisible = state
+        wb_news_details?.let {
+            it.isVisible = !state
+        }
+        tv_news_details_load_error?.let {
+            it.isVisible = state
+        }
     }
 
     companion object {

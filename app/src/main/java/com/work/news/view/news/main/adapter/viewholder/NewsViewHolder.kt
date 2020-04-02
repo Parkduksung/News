@@ -52,7 +52,7 @@ class NewsViewHolder(
 
             ll_news_keyword.isVisible = keywordList.isNotEmpty()
 
-            if (keywordList.isNotEmpty()) {
+            if (keywordList.isNotEmpty() && keywordList.size == 3) {
                 tv_news_keyword1.text = keywordList[0]
                 tv_news_keyword2.text = keywordList[1]
                 tv_news_keyword3.text = keywordList[2]

@@ -9,6 +9,7 @@ import com.work.news.R
 import com.work.news.data.model.NewsItem
 import com.work.news.util.AppExecutors
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import java.net.URL
 
 data class NewsResponse(
@@ -25,16 +26,26 @@ data class NewsResponse(
         AppExecutors().diskIO.execute {
 
             try {
+
                 val document = Jsoup.connect(newsResponseUrl).get()
 
-                val content = document.select(CSS_QUERY_CONTENT).text()
+                val content: String
+
+                val contentForText = getContentByNewsCompany(document)
+
+                val contentForDescription = document.select(CSS_QUERY_CONTENT_DESCRIPTION)
+                    .attr(ATTRIBUTE_KEY_CONTENT_DESCRIPTION)
+
+                //본문에서 발췌한다 해도 안되면 description 에서 가져오기.
+                content = if (contentForText.isNotEmpty()) {
+                    contentForText
+                } else {
+                    contentForDescription
+                }
 
                 val keywordList = getKeyword(content)
 
-                val imagePath =
-                    document.select(CSS_QUERY_IMAGE).attr(ATTRIBUTE_KEY_IMAGE)
-
-                val imageBitmap = imagePathToBitmap(imagePath)
+                val imageBitmap = getImageByNewsCompany(document)
 
                 AppExecutors().mainThread.execute {
 
@@ -60,8 +71,11 @@ data class NewsResponse(
                     )
                     callback.convertData(newsItem)
                 }
+
             }
+
         }
+
     }
 
 
@@ -72,6 +86,85 @@ data class NewsResponse(
         return BitmapFactory.decodeStream(stream)
     }
 
+    //회사별 이미지 예외처리
+    private fun getImageByNewsCompany(document: Document): Bitmap {
+
+        return when {
+            newsResponseTitle.contains("헬스조선") -> {
+                val imagePath =
+                    document.select("img").first().attr("src")
+                imagePathToBitmap(imagePath)
+            }
+            else -> {
+                val imagePath =
+                    document.select(CSS_QUERY_IMAGE).attr(ATTRIBUTE_KEY_IMAGE)
+                imagePathToBitmap(imagePath)
+            }
+        }
+
+    }
+
+    //회사별 본문 예외처리
+    private fun getContentByNewsCompany(document: Document): String {
+        return when {
+            newsResponseTitle.contains("동아일보") -> document.select("div[class=article_txt]").text()
+            newsResponseTitle.contains("조선일보") -> document.select("div[class=par]").text()
+            newsResponseTitle.contains("지데일리") -> document.select("div[class=cnt_view news_body_area]").text()
+            newsResponseTitle.contains("MBN스타") -> document.select("div[class=article_info]").text()
+            newsResponseTitle.contains("연합뉴스") -> document.select("div[class=story-news article]").text()
+            newsResponseTitle.contains("비즈니스포스트") -> document.select("div[class=post-contents]").text()
+            newsResponseTitle.contains("부산일보") -> document.select("div[class=article_content]").text()
+            newsResponseTitle.contains("VOA Korean") -> document.select("div[class=article__body]").text()
+            newsResponseTitle.contains("국제신문") -> document.select("div[class=news_article]").text()
+            newsResponseTitle.contains("tbs뉴스") -> document.select("div[class=text]").text()
+            newsResponseTitle.contains("서울경제신문") -> document.select("div[class=article]").text()
+
+            newsResponseTitle.contains("매일경제") -> {
+                val content = document.select("div[id=Conts]").text()
+
+                if (content.isNotEmpty()) {
+                    content
+                } else {
+                    document.select("div[id=article_txt]").text()
+                }
+            }
+
+            newsResponseTitle.contains("연합뉴스") -> {
+
+                val content = document.select(CSS_QUERY_CONTENT_TEXT).text()
+                if (content.isEmpty()) {
+                    //유튜브 영상일때
+                    "Youtube 영상"
+                } else {
+                    document.select(CSS_QUERY_CONTENT_TEXT).text()
+                }
+            }
+            newsResponseTitle.contains("SBS 뉴스") -> {
+
+                if ((document.select(CSS_QUERY_CONTENT_TEXT).text()).isEmpty()) {
+                    val content = document.select("div[class=text_area]").text()
+                    //유튜브방송일때와 자사 방송일때
+                    if (content.isEmpty()) {
+                        "Youtube 영상"
+                    } else {
+                        content
+                    }
+                } else {
+                    document.select(CSS_QUERY_CONTENT_TEXT).text()
+                }
+            }
+            else -> {
+                //동아일보인데 소속을 밝히지 않은 예외.
+                val content = document.select("div[class=article_txt]").text()
+
+                if (content.isNotEmpty()) {
+                    content
+                } else {
+                    document.select(CSS_QUERY_CONTENT_TEXT).text()
+                }
+            }
+        }
+    }
 
     private fun getFailToBringBitmap(): Bitmap {
         val failToBringImage =
@@ -81,7 +174,6 @@ data class NewsResponse(
             ) as BitmapDrawable
         return failToBringImage.bitmap
     }
-
 
     private fun getKeyword(content: String): List<String> {
 
@@ -163,7 +255,11 @@ data class NewsResponse(
 
     companion object {
 
-        const val CSS_QUERY_CONTENT = "div[itemprop=articleBody]"
+        //본문 발췌중 겹치는 부분의 쿼리
+        const val CSS_QUERY_CONTENT_TEXT = "div[itemprop=articleBody]"
+
+        private const val ATTRIBUTE_KEY_CONTENT_DESCRIPTION = "content"
+        private const val CSS_QUERY_CONTENT_DESCRIPTION = "meta[property=og:description]"
         private const val ATTRIBUTE_KEY_IMAGE = "content"
         private const val CSS_QUERY_IMAGE = "meta[property=og:image]"
     }
