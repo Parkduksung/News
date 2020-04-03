@@ -2,6 +2,7 @@
 
 package com.work.news.view.news.details
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -101,12 +102,13 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
     }
 
     //웹뷰
+    @SuppressLint("SetJavaScriptEnabled")
     private fun showUrl(webView: WebView, url: String) {
 
         webView.loadUrl(url)
         webView.settings.apply {
-            this.setGeolocationEnabled(true)
-            this.javaScriptEnabled = true
+            setGeolocationEnabled(true)
+            javaScriptEnabled = true
         }
 
         webView.webChromeClient = object : WebChromeClient() {
@@ -130,28 +132,25 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
             ) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 showConnectUrlErrorState(true)
-                pb_news_details_loading?.let {
-                    it.visibility = View.GONE
-                }
+                showLoadingProgressState(false)
             }
 
             //url 연결중
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
 
-                showConnectUrlErrorState(false)
+                showLoadingProgressState(true)
 
-                pb_news_details_loading?.let {
-                    it.visibility = View.VISIBLE
-                }
+                showConnectUrlErrorState(false)
 
                 //예외처리
                 if (url != null) {
 
                     //전화번호 눌렀을때 처리.
                     if (url.startsWith("tel:")) {
-                        val intent = Intent(Intent.ACTION_DIAL, Uri.parse(url))
-                        startActivity(intent)
-                        pb_news_details_loading.visibility = View.GONE
+                        Intent(Intent.ACTION_DIAL, Uri.parse(url)).apply {
+                            startActivity(this)
+                        }
+                        showLoadingProgressState(false)
                         return true
                     }
 
@@ -166,7 +165,7 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
                             existPackageIntent.data =
                                 Uri.parse("https://play.google.com/store/apps/details?id=${existPackage.name}&hl=ko")
                             startActivity(existPackageIntent)
-                            pb_news_details_loading.visibility = View.GONE
+                            showLoadingProgressState(false)
                             true
                         } else {
                             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
@@ -184,9 +183,7 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
-                pb_news_details_loading?.let {
-                    it.visibility = View.GONE
-                }
+                showLoadingProgressState(false)
 
                 ll_news_details_title_and_keyword?.let {
                     it.isVisible = !webView.canGoBack()
@@ -197,6 +194,14 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
             }
         }
 
+    }
+
+
+    //로딩 상태를 보여주는 부분
+    override fun showLoadingProgressState(state: Boolean) {
+        pb_news_details_loading?.let {
+            it.isVisible = state
+        }
     }
 
     //인터넷 연결 상태에 대한 사용자에게 보여주는 부분
@@ -211,7 +216,7 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
     companion object {
 
-        const val NEWS_ITEM = "newsItem"
+        private const val NEWS_ITEM = "newsItem"
 
         private var TOGGLE_PAGE_HISTORY = false
 

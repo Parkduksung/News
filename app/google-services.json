@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "62269022999",
+    "firebase_url": "https://project-myrealtrip.firebaseio.com",
+    "project_id": "project-myrealtrip",
+    "storage_bucket": "project-myrealtrip.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62269022999:android:ca744fa048526c64aa4d52",
+        "android_client_info": {
+          "package_name": "com.work.news"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62269022999-u7ujru1sfm3atp1j775kjugfd71cn8ma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMjjO2zSX6reCZccBl1PFWwI9Dv8QVcnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62269022999-u7ujru1sfm3atp1j775kjugfd71cn8ma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

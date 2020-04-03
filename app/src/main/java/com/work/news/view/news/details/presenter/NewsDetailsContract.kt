@@ -4,6 +4,7 @@ interface NewsDetailsContract {
 
     interface View {
 
+        fun showLoadingProgressState(state: Boolean)
     }
 
     interface Presenter {

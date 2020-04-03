@@ -28,13 +28,13 @@ data class NewsResponse(
             try {
 
                 val document = Jsoup.connect(newsResponseUrl).get()
-
                 val content: String
 
                 val contentForText = getContentByNewsCompany(document)
 
-                val contentForDescription = document.select(CSS_QUERY_CONTENT_DESCRIPTION)
-                    .attr(ATTRIBUTE_KEY_CONTENT_DESCRIPTION)
+                val contentForDescription =
+                    document.select(CSS_QUERY_CONTENT_DESCRIPTION)
+                        .attr(ATTRIBUTE_KEY_CONTENT_DESCRIPTION)
 
                 //본문에서 발췌한다 해도 안되면 description 에서 가져오기.
                 content = if (contentForText.isNotEmpty()) {
@@ -79,6 +79,7 @@ data class NewsResponse(
     }
 
 
+    //이미지경로를 Bitmap 으로 변환
     private fun imagePathToBitmap(path: String): Bitmap {
         val url = URL(path)
         val conn = url.openConnection().apply { connect() }
@@ -86,17 +87,29 @@ data class NewsResponse(
         return BitmapFactory.decodeStream(stream)
     }
 
+    //이미지 로드 실패시 보여줄 이미지
+    private fun getFailToBringBitmap(): Bitmap {
+        val failToBringImage =
+            ContextCompat.getDrawable(
+                App.instance.context(),
+                R.drawable.fail_to_bring_image
+            ) as BitmapDrawable
+        return failToBringImage.bitmap
+    }
+
     //회사별 이미지 예외처리
     private fun getImageByNewsCompany(document: Document): Bitmap {
 
+        val imagePath: String
+
         return when {
             newsResponseTitle.contains("헬스조선") -> {
-                val imagePath =
+                imagePath =
                     document.select("img").first().attr("src")
                 imagePathToBitmap(imagePath)
             }
             else -> {
-                val imagePath =
+                imagePath =
                     document.select(CSS_QUERY_IMAGE).attr(ATTRIBUTE_KEY_IMAGE)
                 imagePathToBitmap(imagePath)
             }
@@ -106,6 +119,9 @@ data class NewsResponse(
 
     //회사별 본문 예외처리
     private fun getContentByNewsCompany(document: Document): String {
+
+        val content: String
+
         return when {
             newsResponseTitle.contains("동아일보") -> document.select("div[class=article_txt]").text()
             newsResponseTitle.contains("조선일보") -> document.select("div[class=par]").text()
@@ -120,8 +136,7 @@ data class NewsResponse(
             newsResponseTitle.contains("서울경제신문") -> document.select("div[class=article]").text()
 
             newsResponseTitle.contains("매일경제") -> {
-                val content = document.select("div[id=Conts]").text()
-
+                content = document.select("div[id=Conts]").text()
                 if (content.isNotEmpty()) {
                     content
                 } else {
@@ -131,7 +146,7 @@ data class NewsResponse(
 
             newsResponseTitle.contains("연합뉴스") -> {
 
-                val content = document.select(CSS_QUERY_CONTENT_TEXT).text()
+                content = document.select(CSS_QUERY_CONTENT_TEXT).text()
                 if (content.isEmpty()) {
                     //유튜브 영상일때
                     "Youtube 영상"
@@ -142,7 +157,7 @@ data class NewsResponse(
             newsResponseTitle.contains("SBS 뉴스") -> {
 
                 if ((document.select(CSS_QUERY_CONTENT_TEXT).text()).isEmpty()) {
-                    val content = document.select("div[class=text_area]").text()
+                    content = document.select("div[class=text_area]").text()
                     //유튜브방송일때와 자사 방송일때
                     if (content.isEmpty()) {
                         "Youtube 영상"
@@ -155,8 +170,7 @@ data class NewsResponse(
             }
             else -> {
                 //동아일보인데 소속을 밝히지 않은 예외.
-                val content = document.select("div[class=article_txt]").text()
-
+                content = document.select("div[class=article_txt]").text()
                 if (content.isNotEmpty()) {
                     content
                 } else {
@@ -166,15 +180,7 @@ data class NewsResponse(
         }
     }
 
-    private fun getFailToBringBitmap(): Bitmap {
-        val failToBringImage =
-            ContextCompat.getDrawable(
-                App.instance.context(),
-                R.drawable.fail_to_bring_image
-            ) as BitmapDrawable
-        return failToBringImage.bitmap
-    }
-
+    //키워드 선별 알고리즘
     private fun getKeyword(content: String): List<String> {
 
         //반환할 키워드 3개의 리스트
@@ -249,7 +255,12 @@ data class NewsResponse(
             }
         }
 
-        return getKeywordList
+        return if (getKeywordList.size == 3) {
+            getKeywordList
+        } else {
+            emptyList()
+        }
+
     }
 
 
