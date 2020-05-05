@@ -24,16 +24,16 @@ class NewsViewHolder(
     fun bind(item: NewsItem) {
         super.itemView.run {
 
-            tv_news_item_title.text = item.newsItemTitle
-            tv_news_item_content.text = item.newsItemContent
+            tv_news_item_title.text = item.title
+            tv_news_item_content.text = item.content
 
-            checkKeywordList(item.newsItemKeywordList)
+            checkKeywordList(item.keywordList)
 
             val radiusOfImageBackground =
                 context.resources.getDimensionPixelSize(R.dimen.corner_radius_size)
 
             Glide.with(this)
-                .load(item.newsItemImage)
+                .load(item.image)
                 .transform(CenterCrop(), RoundedCorners(radiusOfImageBackground))
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(iv_news_item_image)
@@ -50,7 +50,9 @@ class NewsViewHolder(
 
         super.itemView.run {
 
-            ll_news_keyword.isVisible = keywordList.isNotEmpty()
+            tv_news_keyword1.isVisible = keywordList.isNotEmpty()
+            tv_news_keyword2.isVisible = keywordList.isNotEmpty()
+            tv_news_keyword3.isVisible = keywordList.isNotEmpty()
 
             if (keywordList.isNotEmpty()) {
                 tv_news_keyword1.text = keywordList[0]

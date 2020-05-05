@@ -55,23 +55,23 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
         getNewsItem?.let { newsItem ->
 
-            val splitNewsTitle = newsItem.newsItemTitle.split("-")
+            val splitNewsTitle = newsItem.title.split("-")
 
             if (splitNewsTitle.isNotEmpty() && splitNewsTitle.size == 2) {
                 tv_news_details_title.text = splitNewsTitle[0]
             } else {
-                tv_news_details_title.text = newsItem.newsItemTitle
+                tv_news_details_title.text = newsItem.title
             }
 
-            cl_news_details_keyword.isVisible = newsItem.newsItemKeywordList.isNotEmpty()
+            cl_news_details_keyword.isVisible = newsItem.keywordList.isNotEmpty()
 
-            if (newsItem.newsItemKeywordList.isNotEmpty()) {
-                tv_news_details_keyword1.text = newsItem.newsItemKeywordList[0]
-                tv_news_details_keyword2.text = newsItem.newsItemKeywordList[1]
-                tv_news_details_keyword3.text = newsItem.newsItemKeywordList[2]
+            if (newsItem.keywordList.isNotEmpty()) {
+                tv_news_details_keyword1.text = newsItem.keywordList[0]
+                tv_news_details_keyword2.text = newsItem.keywordList[1]
+                tv_news_details_keyword3.text = newsItem.keywordList[2]
             }
 
-            showUrl(wb_news_details, newsItem.newsItemUrl)
+            showUrl(wb_news_details, newsItem.url)
 
         }
 

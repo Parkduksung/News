@@ -186,7 +186,6 @@ data class NewsResponse(
         //반환할 키워드 3개의 리스트
         val getKeywordList = mutableListOf<String>()
 
-
         if (content.isEmpty()) {
             return emptyList()
         }
@@ -247,7 +246,6 @@ data class NewsResponse(
         allSentencesByFoundCount.forEach {
             // it.value => 발견된 횟수
             it.value.forEach { sentences ->
-
                 if (getKeywordCount < 3 && sentences.length >= 2) {
                     getKeywordCount++
                     getKeywordList.add(sentences)

@@ -6,9 +6,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class NewsItem(
-    val newsItemTitle: String,
-    val newsItemUrl: String,
-    val newsItemContent: String,
-    val newsItemImage: Bitmap,
-    val newsItemKeywordList: List<String>
+    val title: String,
+    val url: String,
+    val content: String,
+    val image: Bitmap,
+    val keywordList: List<String>
 ) : Parcelable
