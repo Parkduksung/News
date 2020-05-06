@@ -21,9 +21,10 @@
 
     <ImageButton
         android:id="@+id/ib_news_details_back_pressed"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/back_pressed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:src="@drawable/back_pressed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

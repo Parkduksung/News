@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.crashlytics.android.Crashlytics
 import com.work.news.App
 import com.work.news.R
 import com.work.news.data.model.NewsItem
@@ -19,7 +18,6 @@ import com.work.news.view.news.main.adapter.NewsAdapter
 import com.work.news.view.news.main.adapter.listener.NewsItemClickListener
 import com.work.news.view.news.main.presenter.NewsContract
 import com.work.news.view.news.main.presenter.NewsPresenter
-import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.news_main_activity.*
 
 
@@ -38,23 +36,22 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
         super.onCreate(savedInstanceState)
         setContentView(R.layout.news_main_activity)
 
-        Fabric.with(this, Crashlytics())
-
-        presenter = NewsPresenter(
-            this, NewsRepositoryImpl.getInstance(
-                NewsRemoteDataSourceImpl.getInstance(AppExecutors())
+        presenter =
+            NewsPresenter(
+                this, NewsRepositoryImpl.getInstance(
+                    NewsRemoteDataSourceImpl.getInstance(AppExecutors())
+                )
             )
-        )
 
         swipe_news_main.setColorSchemeResources(R.color.colorPrimary)
         swipe_news_main.setOnRefreshListener(this)
 
-        init()
+        startView()
 
     }
 
 
-    private fun init() {
+    private fun startView() {
         rv_news_main.run {
             layoutManager = LinearLayoutManager(this@NewsActivity)
             adapter = newsAdapter
@@ -95,7 +92,6 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
 
     //인터넷 연결 상태에 대한 사용자에게 보여주는 부분
     override fun showLoadDataErrorState(state: Boolean) {
-
         rv_news_main.isVisible = !state
         tv_news_main_load_error.isVisible = state
     }
@@ -127,7 +123,7 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
     override fun onRefresh() {
         if (!pb_news_main_loading.isVisible) {
             presenter.resetNewsItemList()
-            init()
+            startView()
             swipe_news_main.isRefreshing = false
         } else {
             Toast.makeText(
@@ -141,11 +137,7 @@ class NewsActivity : AppCompatActivity(), NewsContract.View, NewsItemClickListen
     }
 
     override fun showNewsData(item: NewsItem) {
-
-        rv_news_main.run {
-            newsAdapter.addData(item)
-        }
-
+        newsAdapter.addData(item)
     }
 
 

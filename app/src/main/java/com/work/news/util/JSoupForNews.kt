@@ -1,9 +1,10 @@
 package com.work.news.util
 
+import com.work.news.data.model.NewsItem
+import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
 object JSoupForNews {
-
 
     private const val ATTRIBUTE_KEY_CONTENT_DESCRIPTION = "content"
     private const val CSS_QUERY_CONTENT_DESCRIPTION = "meta[property=og:description]"
@@ -11,9 +12,70 @@ object JSoupForNews {
     private const val ATTRIBUTE_KEY_IMAGE = "content"
     private const val CSS_QUERY_IMAGE = "meta[property=og:image]"
 
+    private const val EMPTY_CONTENT = ""
+    private const val EMPTY_IMAGE = ""
+
+    fun getNewsItem(title: String, url: String, callback: (NewsItem) -> Unit) {
+
+        AppExecutors().diskIO.execute {
+            try {
+                val document =
+                    Jsoup.connect(url).get()
+
+                //본문에서 발췌한다 해도 안되면 description 에서 가져오기.
+                val content =
+                    if (getContentByNewsCompany(
+                            document,
+                            title
+                        ).isNotEmpty()
+                    ) {
+                        getContentByNewsCompany(
+                            document,
+                            title
+                        )
+                    } else {
+                        getContentForDescription(document)
+                    }
+
+                val keywordList = getKeyword(content)
+
+                val image = getImageByNewsCompany(document, title)
+
+                AppExecutors().mainThread.execute {
+
+                    val newsItem =
+                        NewsItem(
+                            title,
+                            url,
+                            content,
+                            image,
+                            keywordList
+                        )
+
+                    callback(newsItem)
+
+                }
+
+            } catch (e: Exception) {
+
+                AppExecutors().mainThread.execute {
+                    val newsItem =
+                        NewsItem(
+                            title,
+                            url,
+                            EMPTY_CONTENT,
+                            EMPTY_IMAGE,
+                            emptyList()
+                        )
+                    callback(newsItem)
+                }
+            }
+        }
+    }
+
 
     //회사별 이미지 예외처리
-    fun getImageByNewsCompany(document: Document, title: String): String {
+    private fun getImageByNewsCompany(document: Document, title: String): String {
         return when {
             title.contains("헬스조선") -> {
                 document.select("img").first().attr("src")
@@ -22,15 +84,14 @@ object JSoupForNews {
                 document.select(CSS_QUERY_IMAGE).attr(ATTRIBUTE_KEY_IMAGE)
             }
         }
-
     }
 
-    fun getContentForDescription(document: Document): String =
+    private fun getContentForDescription(document: Document): String =
         document.select(CSS_QUERY_CONTENT_DESCRIPTION)
             .attr(ATTRIBUTE_KEY_CONTENT_DESCRIPTION)
 
     //회사별 본문 예외처리
-    fun getContentByNewsCompany(document: Document, title: String): String {
+    private fun getContentByNewsCompany(document: Document, title: String): String {
 
         val content: String
 
@@ -93,7 +154,7 @@ object JSoupForNews {
     }
 
     //키워드 선별 알고리즘
-    fun getKeyword(content: String): List<String> {
+    private fun getKeyword(content: String): List<String> {
 
         //반환할 키워드 3개의 리스트
         val getKeywordList = mutableListOf<String>()

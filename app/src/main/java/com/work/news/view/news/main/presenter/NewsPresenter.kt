@@ -14,30 +14,24 @@ class NewsPresenter(
     private val redundancyPreventionForNewsItem by lazy { mutableSetOf<NewsItem>() }
 
     override fun getNewsData(url: String) {
-
         newsView.showDataProgress(NewsActivity.LOADING_DATA)
-
         getConvertNewsData(url)
-
     }
 
-    //url 에 따른 데이터 가져옴
     private fun getConvertNewsData(url: String) {
-
         newsRepository.getNewsData(url, object : NewsRepositoryCallback {
             override fun onSuccess(newsList: List<NewsResponse>) {
                 newsView.showLoadDataErrorState(false)
-                newsList.map {
-                    it.toNewsItem(object : NewsResponse.ToNewsItemCallback {
-                        override fun convertData(newsItem: NewsItem) {
-                            // 사용자가 임의로 새로고침 계속 할 경우 방지.
-                            if (!redundancyPreventionForNewsItem.contains(newsItem)) {
-                                redundancyPreventionForNewsItem.add(newsItem)
-                                newsView.showNewsData(newsItem)
+                newsList.map { newsResponse ->
 
-                                if (newsList.size == redundancyPreventionForNewsItem.size) {
-                                    newsView.showDataProgress(NewsActivity.END_DATA_LOAD)
-                                }
+                    newsResponse.toNewsItem(callback = { newsItem ->
+
+                        if (!redundancyPreventionForNewsItem.contains(newsItem)) {
+                            redundancyPreventionForNewsItem.add(newsItem)
+                            newsView.showNewsData(newsItem)
+
+                            if (newsList.size == redundancyPreventionForNewsItem.size) {
+                                newsView.showDataProgress(NewsActivity.END_DATA_LOAD)
                             }
                         }
                     })

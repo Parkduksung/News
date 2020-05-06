@@ -12,15 +12,16 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_main_activity)
 
-        start()
+        startView()
 
     }
 
-    private fun start() {
+    private fun startView() {
 
         Handler().postDelayed({
 
-            val nextIntent = Intent(this, NewsActivity::class.java)
+            val nextIntent =
+                Intent(this, NewsActivity::class.java)
 
             startActivity(nextIntent)
 
