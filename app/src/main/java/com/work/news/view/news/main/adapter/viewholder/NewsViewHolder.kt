@@ -36,6 +36,7 @@ class NewsViewHolder(
                 .load(item.image)
                 .transform(CenterCrop(), RoundedCorners(radiusOfImageBackground))
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .error(R.drawable.fail_to_bring_image)
                 .into(iv_news_item_image)
 
 

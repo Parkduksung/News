@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.work.news.view.news.details
 
 import android.annotation.SuppressLint
@@ -27,7 +25,6 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
     private lateinit var presenter: NewsDetailsContract.Presenter
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,22 +37,24 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
         super.onViewCreated(view, savedInstanceState)
 
         presenter = NewsDetailsPresenter(this)
-        pb_news_details_loading.bringToFront()
         ib_news_details_back_pressed.setOnClickListener(this)
 
-
-        init()
+        startView()
 
     }
 
 
-    private fun init() {
+    private fun startView() {
 
-        val getNewsItem = arguments?.getParcelable<NewsItem>(NEWS_ITEM)
+        pb_news_details_loading.bringToFront()
+
+        val getNewsItem =
+            arguments?.getParcelable<NewsItem>(NEWS_ITEM)
 
         getNewsItem?.let { newsItem ->
 
-            val splitNewsTitle = newsItem.title.split("-")
+            val splitNewsTitle =
+                newsItem.title.split(SPLIT_TEXT)
 
             if (splitNewsTitle.isNotEmpty() && splitNewsTitle.size == 2) {
                 tv_news_details_title.text = splitNewsTitle[0]
@@ -84,7 +83,7 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
             wb_news_details.goBack()
             BACK_WITH_WEB_VIEW_HISTORY
         } else {
-            if (fragmentManager?.backStackEntryCount != 0) {
+            if (fragmentManager?.backStackEntryCount != EMPTY_STACK_COUNT) {
                 BACK_NO_WEB_VIEW_HISTORY_EXIST_POP_STACK
             } else {
                 BACK_NO_WEB_VIEW_HISTORY_NONE_POP_STACK
@@ -218,12 +217,16 @@ class NewsDetailsFragment : Fragment(), NewsDetailsContract.View, View.OnClickLi
 
         private const val NEWS_ITEM = "newsItem"
 
+        private const val SPLIT_TEXT = "-"
+        private const val EMPTY_STACK_COUNT = 0
+
+
         private var TOGGLE_PAGE_HISTORY = false
+
 
         const val BACK_WITH_WEB_VIEW_HISTORY = 0
         const val BACK_NO_WEB_VIEW_HISTORY_EXIST_POP_STACK = 1
         const val BACK_NO_WEB_VIEW_HISTORY_NONE_POP_STACK = 2
-
 
         fun newInstance(
             newsItem: NewsItem

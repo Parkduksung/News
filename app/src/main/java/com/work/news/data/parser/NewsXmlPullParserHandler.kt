@@ -40,11 +40,11 @@ class NewsXmlPullParserHandler {
                             }
 
                             tagName.equals("title", ignoreCase = true) -> {
-                                product?.newsResponseTitle = text.orEmpty()
+                                product?.title = text.orEmpty()
                             }
 
                             tagName.equals("link", ignoreCase = true) -> {
-                                product?.newsResponseUrl = text.orEmpty()
+                                product?.url = text.orEmpty()
                             }
 
                         }
