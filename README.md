@@ -9,7 +9,11 @@ News App 은 Google News를 크롤링하여 보여주는 앱이다.
 
 ## 결과
 
-![123!](https://user-images.githubusercontent.com/54328309/82654976-76aa0680-9c5c-11ea-8ee8-dd3dbd67d0e1.gif)![124!](https://user-images.githubusercontent.com/54328309/82654983-7d387e00-9c5c-11ea-8b80-ef2086b30780.gif)
+<div>
+<img width="200" src="https://user-images.githubusercontent.com/54328309/82654976-76aa0680-9c5c-11ea-8ee8-dd3dbd67d0e1.gif">
+<img width="200" src="https://user-images.githubusercontent.com/54328309/82654983-7d387e00-9c5c-11ea-8b80-ef2086b30780.gif">
+</div>
+
 
 ## Libraries and tools
 - [Glide](https://github.com/bumptech/glide)
