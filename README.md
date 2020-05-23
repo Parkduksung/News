@@ -1,5 +1,6 @@
 
 # **News**
+![ic_news_app_round](https://user-images.githubusercontent.com/54328309/82733127-c36d0a80-9d4c-11ea-8f7e-869e9470ef9b.png)
 
 News App 은 Google News를 크롤링하여 보여주는 앱이다.
 
