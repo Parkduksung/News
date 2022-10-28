@@ -1,3 +1,4 @@
 <resources>
-
+    <string name="unbookmark">unbookmark</string>
+    <string name="bookmark">bookmark</string>
 </resources>
