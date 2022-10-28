@@ -1,4 +1,4 @@
-package com.work.news.theme
+package com.work.news.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

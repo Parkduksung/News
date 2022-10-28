@@ -1,4 +1,4 @@
-package com.work.news.theme
+package com.work.news.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
