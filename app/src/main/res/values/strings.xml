@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Jetnews</string>
     <string name="unbookmark">unbookmark</string>
     <string name="bookmark">bookmark</string>
 </resources>

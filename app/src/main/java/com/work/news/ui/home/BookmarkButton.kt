@@ -29,8 +29,6 @@ fun BookmarkButton(
         checked = isBookmark,
         onCheckedChange = { onClick() },
         modifier = modifier.semantics {
-            // Use a custom click label that accessibility services can communicate to the user.
-            // We only want to override the label, not the actual action, so for the action we pass null.
             this.onClick(label = clickLabel, action = null)
         }
     ) {
@@ -44,7 +42,7 @@ fun BookmarkButton(
 
 @Preview
 @Composable
-fun previewBookmarkBookmarkedButton(){
+private fun PreviewBookmarkBookmarkedButton(){
     Surface {
         BookmarkButton(isBookmark = true, onClick = {  })
     }
@@ -52,7 +50,7 @@ fun previewBookmarkBookmarkedButton(){
 
 @Preview
 @Composable
-fun previewBookmarkButton(){
+private fun PreviewBookmarkButton(){
     Surface {
         BookmarkButton(isBookmark = false, onClick = {  })
     }
